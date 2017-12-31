@@ -29,36 +29,36 @@
     </div>
     <transition name="fade">
       <div class="detail" v-if="detailShow">
-          <div class="detail-wrapper clearfix">
-            <div class="detail-main">
-              <h1 class="name">{{seller.name}}</h1>
-              <div class="star-wrapper">
-                <Star :size="48" :score="seller.score"></Star>
-              </div>
-              <div class="title">
-                <div class="line"></div>
-                <div class="text">优惠信息</div>
-                <div class="line"></div>
-              </div>
-              <ul class="supports" v-if="seller.supports">
-                <li class="support-item" v-for="item in seller.supports">
-                  <span class="icon" :class="classMap[item.type]"></span><span
-                  class="text">{{item.description}}</span>
-                </li>
-              </ul>
-              <div class="title">
-                <div class="line"></div>
-                <div class="text">商家公告</div>
-                <div class="line"></div>
-              </div>
-              <div class="bulletin">
-                <p class="content">{{seller.bulletin}}</p>
-              </div>
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <Star :size="48" :score="seller.score"></Star>
+            </div>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul class="supports" v-if="seller.supports">
+              <li class="support-item" v-for="item in seller.supports">
+                <span class="icon" :class="classMap[item.type]"></span><span
+                class="text">{{item.description}}</span>
+              </li>
+            </ul>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="content">{{seller.bulletin}}</p>
             </div>
           </div>
-          <div class="detail-close">
-            <i class="icon-close" @click="hideDetail"></i>
-          </div>
+        </div>
+        <div class="detail-close">
+          <i class="icon-close" @click="hideDetail"></i>
+        </div>
       </div>
     </transition>
   </div>
@@ -109,6 +109,7 @@
       .avatar
         display: inline-block
         vertical-align: top
+        line-height: 0
         img
           border-radius: 2px
       .content
@@ -133,10 +134,10 @@
           line-height: 12px
           font-size: 12px
         .support
+          line-height: 12px
           .icon
             display: inline-block
             vertical-align: top
-            margin-top: 3px
             width: 12px
             height: 12px
             margin-right: 4px
