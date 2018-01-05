@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <li class="menu-item" v-for="item in goods">
           <span class="text border-1px">
@@ -9,7 +9,7 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
+    <div class="foods-wrapper" ref="foodWrapper">
       <ul>
         <li class="food-list" v-for="item in goods">
           <h1 class="title">{{item.name}}</h1>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="price">
                   <span class="now"><span class="symbol">￥</span>{{food.price}}</span><span class="old"
-                                                                v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                                                                                            v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
               </div>
             </li>
@@ -38,6 +38,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import BScroll from 'better-scroll';
+
   const ERR_OK = 0;
 
   export default {
@@ -58,8 +60,17 @@
         response = response.body;
         if (response.errno === ERR_OK) {
           this.goods = response.data;
+          this.$nextTick(() => {
+            this._initScroll();
+          });
         }
       });
+    },
+    methods: {
+      _initScroll() {
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+        this.foodScroll = new BScroll(this.$refs.foodWrapper, {});
+      }
     }
   };
 </script>
@@ -143,6 +154,7 @@
             color: rgb(147, 153, 159)
           .desc
             margin: 8px 0
+            line-height : 12px
           .extra
             .count
               margin-right: 12px
