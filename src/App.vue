@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div>
     <Header :seller="seller"></Header>
     <div class="tab border-1px">
       <!-- 使用 router-link 组件来导航. -->
       <!-- 通过传入 `to` 属性指定链接. -->
       <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
       <div class="tab-item">
-        <router-link to="/goods">商品</router-link>
+        <router-link to="/goods" exact>商品</router-link>
       </div>
       <div class="tab-item">
         <router-link to="/ratings">评论</router-link>
