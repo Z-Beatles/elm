@@ -2,15 +2,15 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li class="menu-item" :class="{'current':currentIndex===index}"
-            v-for="(item,index) in goods" @click="selectMeun(index,$event)">
+        <li class="menu-item" :class="{ current : currentIndex === index }"
+            v-for="(item, index) in goods" @click="selectMeun(index, $event)">
           <span class="text border-1px">
             <span class="icon" :class="classMap[item.type]" v-show="item.type>0"></span>{{item.name}}
           </span>
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper" ref="foodWrapper">
+    <div class="food-wrapper" ref="foodWrapper">
       <ul>
         <li class="food-list food-list-hook" v-for="item in goods">
           <h1 class="title">{{item.name}}</h1>
@@ -29,17 +29,24 @@
                   <span class="now"><span class="symbol">￥</span>{{food.price}}</span><span class="old"
                                                                                             v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <Cartcontrol :food="food"></Cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <Shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
+              :min-price="seller.minPrice"></Shopcart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
+  import Shopcart from '@/components/shopcart/shopcart';
+  import Cartcontrol from '@/components/cartcontrol/cartcontrol';
 
   const ERR_OK = 0;
 
@@ -66,6 +73,17 @@
           }
         }
         return 0;
+      },
+      selectFoods() {
+        let foods = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          });
+        });
+        return foods;
       }
     },
     created() {
@@ -88,6 +106,7 @@
           click: true
         });
         this.foodScroll = new BScroll(this.$refs.foodWrapper, {
+          click: true,
           probeType: 3
         });
 
@@ -104,7 +123,6 @@
           height += item.clientHeight;
           this.listHeight.push(height);
         }
-        console.log(this.listHeight);
       },
       selectMeun(index, event) {
         if (!event._constructed) {
@@ -114,6 +132,10 @@
         let el = foodList[index];
         this.foodScroll.scrollToElement(el, 300);
       }
+    },
+    components: {
+      Shopcart,
+      Cartcontrol
     }
   };
 </script>
@@ -170,7 +192,7 @@
           vertical-align: middle
           font-size: 12px
           border-1px(rgba(7, 17, 27, 0.1))
-    .foods-wrapper
+    .food-wrapper
       flex: 1
       .title
         padding-left: 14px
@@ -193,6 +215,7 @@
           margin-right: 10px
         .content
           flex: 1
+          position: relative
           .name
             margin: 2px 0 8px
             height: 14px
@@ -222,4 +245,8 @@
               font-size: 10px
               color: rgb(147, 153, 159)
               text-decoration: line-through
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom: 0
 </style>
