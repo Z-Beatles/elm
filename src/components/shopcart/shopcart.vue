@@ -110,7 +110,6 @@
           let ball = this.balls[i];
           if (ball.show) {
             let rect = ball.el.getBoundingClientRect();
-            console.log(rect.left + '--' + rect.top);
             let x = rect.left - 16;
             let y = -(window.innerHeight - rect.top - 45);
             el.style.display = '';
@@ -228,7 +227,7 @@
         left: 32px
         bottom: 26px
         z-index: 99
-        transition: all 0.4s linear
+        transition: all 0.4s cubic-bezier(.46, -0.59, .82, .51)
         .inner
           width: 16px
           height: 16px
