@@ -27,12 +27,12 @@
         <h1 class="title">购物车</h1>
         <span class="empty">清空</span>
       </div>
-      <div class="list-content">
+      <div class="list-content" ref="listContent">
         <ul>
           <li class="food" v-for="food in selectFoods">
-            <span class="name">{{food.name}}</span>
-            <div class="price">
-              <span>￥{{food.price*food.count}}</span>
+            <div class="details">
+              <span class="name">{{food.name}}</span>
+              <span class="price">￥{{food.price*food.count}}</span>
             </div>
             <div class="cartcontrol-wrapper">
               <Cartcontrol :food="food"></Cartcontrol>
@@ -45,6 +45,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import BScroll from 'better-scroll';
   import Cartcontrol from '@/components/cartcontrol/cartcontrol';
 
   export default {
@@ -168,6 +169,17 @@
           return;
         }
         this.toggleShow = !this.toggleShow;
+        if (this.toggleShow) {
+          this.$nextTick(() => {
+            if (!this.scrool) {
+              this.scrool = new BScroll(this.$refs.listContent, {
+                click: true
+              });
+            } else {
+              this.scrool.refresh();
+            }
+          });
+        }
       }
     },
     components: {
@@ -293,20 +305,20 @@
         overflow: hidden
         background: #fff
         .food
+          display: flex
           padding: 12px 0
           border-bottom: 1px solid rgba(7, 17, 27, 0.1)
-          .name
-            display: inline-block
-            line-height: 24px
-            font-size: 14px
-            color: rgb(7, 17, 27)
-          .price
-            display: inline-block
-            line-height: 24px
-            font-size: 14px
-            font-weight: 700
-            color: rgb(240, 20, 20)
-          .cartcontrol-wrapper
-            float: right
-            display: inline-block
+          .details
+            display: flex
+            justify-content: space-between
+            flex: 1
+            .name
+              line-height: 24px
+              font-size: 14px
+              color: rgb(7, 17, 27)
+            .price
+              line-height: 24px
+              font-size: 14px
+              font-weight: 700
+              color: rgb(240, 20, 20)
 </style>

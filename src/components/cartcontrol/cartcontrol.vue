@@ -48,6 +48,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .cartcontrol
     display: flex
+    position: relative
     font-size: 24px
     color: rgb(0, 160, 220)
     .cart-decrease
