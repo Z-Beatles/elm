@@ -1,11 +1,11 @@
 <template>
   <div class="cartcontrol">
-    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     <transition name="move">
       <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart">
         <div class="inner icon-remove_circle_outline"></div>
       </div>
     </transition>
+    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     <div class="cart-increase icon-add_circle" @click="addCart"></div>
   </div>
 </template>
@@ -29,6 +29,9 @@
         } else {
           this.food.count++;
         }
+
+        // 添加派发事件，将dom对象作为事件参数传入
+        this.$root.eventHub.$emit('cart.add', event.target);
       },
       decreaseCart() {
         if (!event._constructed) {
@@ -55,7 +58,7 @@
         transform: rotate(0)
       &.move-enter, &.move-leave-to
         opacity: 0
-        transform: translate3D(30px, 0, 0)
+        transform: translate3d(30px, 0, 0)
         .inner
           transform: rotate(180deg)
     .cart-count
@@ -69,4 +72,5 @@
       transition: all 0.25s linear
     .cart-increase
       padding: 0 12px
+      z-index: 99
 </style>

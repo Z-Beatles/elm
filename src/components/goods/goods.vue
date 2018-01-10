@@ -38,7 +38,7 @@
         </li>
       </ul>
     </div>
-    <Shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
+    <Shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
               :min-price="seller.minPrice"></Shopcart>
   </div>
 </template>
@@ -98,6 +98,11 @@
             this._calculateHeight();
           });
         }
+      });
+      // 接收子组件传来的car.add事件
+      this.$root.eventHub.$on('cart.add', (target) => {
+        // 调用另一子组件的drop方法
+        this.$refs.shopcart.drop(target);
       });
     },
     methods: {
