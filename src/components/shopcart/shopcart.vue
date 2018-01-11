@@ -13,7 +13,7 @@
             <div class="price" :class="{highlight: totalCount>0}">￥{{totalPrice}}</div>
             <div class="desc">另需配送配￥{{deliveryPrice}}元</div>
           </div>
-          <div class="content-right" :class="payClass">{{payDesc}}</div>
+          <div class="content-right" :class="payClass" @click.stop="pay">{{payDesc}}</div>
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
         </div>
         <div class="list-content" ref="listContent">
           <ul>
-            <li class="food" v-for="food in selectFoods">
+            <li class="food-item" v-for="food in selectFoods">
               <div class="details">
                 <span class="name">{{food.name}}</span>
                 <span class="price">￥{{food.price*food.count}}</span>
@@ -205,6 +205,13 @@
         this.selectFoods.forEach((food) => {
           food.count = 0;
         });
+      },
+      pay() {
+        if (this.totalPrice < this.minPrice) {
+          return;
+        }
+        console.log(this.selectFoods);
+        console.log('总计：' + this.totalPrice + '元');
       }
     },
     components: {
@@ -220,6 +227,7 @@
     position: fixed
     bottom: 0
     left: 0
+    z-index: 99
     width: 100%
     height: 48px
     .shopcart-content
@@ -337,7 +345,7 @@
         max-height: 245px
         overflow: hidden
         background: #fff
-        .food
+        .food-item
           display: flex
           padding: 12px 0
           border-bottom: 1px solid rgba(7, 17, 27, 0.1)

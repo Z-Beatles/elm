@@ -6,7 +6,7 @@
       </div>
     </transition>
     <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
-    <div class="cart-increase icon-add_circle" @click="addCart"></div>
+    <div class="cart-increase icon-add_circle" @click.stop="addCart"></div>
   </div>
 </template>
 
@@ -29,7 +29,6 @@
         } else {
           this.food.count++;
         }
-
         // 添加派发事件，将dom对象作为事件参数传入
         this.$root.eventHub.$emit('cart.add', event.target);
       },
