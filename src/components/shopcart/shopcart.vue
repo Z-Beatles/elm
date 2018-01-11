@@ -1,17 +1,21 @@
 <template>
   <div class="shopcart">
     <div class="shopcart-content" @click="toggleList">
-      <div class="content-left">
-        <div class="logo-wrapper">
-          <div class="logo" :class="{highlight: totalCount>0}">
-            <i class="icon-shopping_cart" :class="{highlight: totalCount>0}"></i>
+      <div class="content-wrapper">
+        <div class="content-flex">
+          <div class="content-left">
+            <div class="logo-wrapper">
+              <div class="logo" :class="{highlight: totalCount>0}">
+                <i class="icon-shopping_cart" :class="{highlight: totalCount>0}"></i>
+              </div>
+              <div class="num" v-show="totalCount>0">{{totalCount}}</div>
+            </div>
+            <div class="price" :class="{highlight: totalCount>0}">￥{{totalPrice}}</div>
+            <div class="desc">另需配送配￥{{deliveryPrice}}元</div>
           </div>
-          <div class="num" v-show="totalCount>0">{{totalCount}}</div>
+          <div class="content-right" :class="payClass">{{payDesc}}</div>
         </div>
-        <div class="price" :class="{highlight: totalCount>0}">￥{{totalPrice}}</div>
-        <div class="desc">另需配送配￥{{deliveryPrice}}元</div>
       </div>
-      <div class="content-right" :class="payClass">{{payDesc}}</div>
     </div>
     <transition name="fold">
       <div class="shopcart-list" v-show="listShow">
@@ -35,7 +39,7 @@
       </div>
     </transition>
     <transition name="fade">
-      <div class="list-mask" v-show="listShow"></div>
+      <div class="list-mask" v-show="listShow" @click="toggleList"></div>
     </transition>
     <div class="ball-container">
       <div v-for="item in balls">
@@ -214,79 +218,98 @@
 
   .shopcart
     position: fixed
-    left: 0
     bottom: 0
+    left: 0
     width: 100%
-    background: #141d27
+    height: 48px
     .shopcart-content
-      display: flex
-      align-items: center
+      position: absolute
+      bottom: 0
+      left: 0
+      z-index: 99
       width: 100%
+      background: #141d27
       color: rgba(255, 255, 255, 0.4)
-      .content-left
-        flex: 1
-        display: flex
-        align-items: center
-        height: 48px
-        .logo-wrapper
-          position: relative
-          top: -8px
-          width: 44px
-          height: 44px
-          padding: 6px
-          margin: 0 12px
-          background: #141d27
-          border-radius: 50%
-          .logo
-            width: 100%
-            height: 100%
-            text-align: center
-            background: #2b343c
-            border-radius: 50%
-            &.highlight
-              background: rgb(0, 160, 220)
-            .icon-shopping_cart
-              line-height: 44px
-              font-size: 24px
+      .content-wrapper
+        position: relative
+        width: 100%
+        height: 100%
+        .content-flex
+          display: flex
+          .content-left
+            display: flex
+            align-items: center
+            flex: 1
+            .logo-wrapper
+              position: absolute
+              top: -8px
+              width: 44px
+              height: 44px
+              padding: 6px
+              margin: 0 12px
+              background: #141d27
+              border-radius: 50%
+              .logo
+                width: 100%
+                height: 100%
+                text-align: center
+                background: #2b343c
+                border-radius: 50%
+                &.highlight
+                  background: rgb(0, 160, 220)
+                .icon-shopping_cart
+                  line-height: 44px
+                  font-size: 24px
+                  &.highlight
+                    color: #fff
+              .num
+                position: absolute
+                top: 0
+                right: 0
+                width: 24px
+                height: 16px
+                line-height: 16px
+                text-align: center
+                border-radius: 16px
+                font-size: 9px
+                font-weight: 700
+                color: #fff
+                background: rgb(240, 20, 20)
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4)
+                &.highlight
+                  background: rgb(0, 160, 220)
+                .icon-shopping_cart
+                  line-height: 44px
+                  font-size: 24px
+                  &.highlight
+                    color: #fff
+            .price
+              line-height: 24px
+              font-size: 16px
+              font-weight: 700
+              border-right: 1px solid rgba(255, 255, 255, 0.1)
+              padding-left: 80px
+              padding-right: 12px
               &.highlight
                 color: #fff
-          .num
-            position: absolute
-            top: 0
-            right: 0
-            width: 24px
-            height: 16px
-            line-height: 16px
+            .desc
+              height: 12px
+              line-height: 12px
+              overflow: hidden
+              font-size: 12px
+              padding-left: 12px
+          .content-right
+            flex: 0 0 105px
+            height: 48px
+            line-height: 48px
+            font-size: 12px
             text-align: center
-            border-radius: 16px
-            font-size: 9px
             font-weight: 700
-            color: #fff
-            background: rgb(240, 20, 20)
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4)
-        .price
-          line-height: 24px
-          font-size: 16px
-          font-weight: 700
-          border-right: 1px solid rgba(255, 255, 255, 0.1)
-          padding-right: 12px
-          &.highlight
-            color: #fff
-        .desc
-          font-size: 12px
-          padding-left: 12px
-      .content-right
-        flex: 0 0 105px
-        height: 48px
-        line-height: 48px
-        font-size: 12px
-        text-align: center
-        font-weight: 700
-        &.not-enough
-          background: #2b333b
-        &.enough
-          background: #00b43c
-          color: #fff
+            &.not-enough
+              background: #2b333b
+            &.enough
+              background: #00b43c
+              color: #fff
     .shopcart-list
       position: absolute
       left: 0
@@ -294,7 +317,7 @@
       width: 100%
       transition: all 0.3s
       &.fold-enter, &.fold-leave-to
-        transform: translateY(50px)
+        transform: translateY(293px)
       .list-header
         height: 40px
         line-height: 40px
@@ -311,7 +334,7 @@
           color: rgb(0, 160, 220)
       .list-content
         padding: 0 18px
-        max-height: 145px
+        max-height: 245px
         overflow: hidden
         background: #fff
         .food
