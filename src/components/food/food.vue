@@ -34,7 +34,7 @@
     z-index: 98
     width: 100%
     background: #fff
-    transition: all
-    &.move-enter, &.move-leave
+    transition: all 0.3s linear
+    &.move-enter, &.move-leave-to
       transform: translate3d(100%, 0, 0)
 </style>
