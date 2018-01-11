@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-    <div class="content" @click="toggleSwitch">
+    <div class="shopcart-content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{highlight: totalCount>0}">
@@ -13,6 +13,30 @@
       </div>
       <div class="content-right" :class="payClass">{{payDesc}}</div>
     </div>
+    <transition name="fold">
+      <div class="shopcart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty" @click="empty">清空</span>
+        </div>
+        <div class="list-content" ref="listContent">
+          <ul>
+            <li class="food" v-for="food in selectFoods">
+              <div class="details">
+                <span class="name">{{food.name}}</span>
+                <span class="price">￥{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <Cartcontrol :food="food"></Cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div class="list-mask" v-show="listShow"></div>
+    </transition>
     <div class="ball-container">
       <div v-for="item in balls">
         <transition name="drop" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
@@ -20,25 +44,6 @@
             <div class="inner inner-hook"></div>
           </div>
         </transition>
-      </div>
-    </div>
-    <div class="shopcart-list" v-show="toggleShow">
-      <div class="list-header">
-        <h1 class="title">购物车</h1>
-        <span class="empty">清空</span>
-      </div>
-      <div class="list-content" ref="listContent">
-        <ul>
-          <li class="food" v-for="food in selectFoods">
-            <div class="details">
-              <span class="name">{{food.name}}</span>
-              <span class="price">￥{{food.price*food.count}}</span>
-            </div>
-            <div class="cartcontrol-wrapper">
-              <Cartcontrol :food="food"></Cartcontrol>
-            </div>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
@@ -79,7 +84,7 @@
           show: false
         }],
         dropBalls: [],
-        toggleShow: false
+        toggleStatus: false
       };
     },
     computed: {
@@ -113,6 +118,25 @@
         } else {
           return `enough`;
         }
+      },
+      listShow() {
+        if (!this.totalCount) {
+          this.toggleStatus = false;
+          return false;
+        }
+        let show = this.toggleStatus;
+        if (show) {
+          this.$nextTick(() => {
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              });
+            } else {
+              this.scroll.refresh();
+            }
+          });
+        }
+        return show;
       }
     },
     methods: {
@@ -164,22 +188,19 @@
           el.style.display = 'none';
         }
       },
-      toggleSwitch() {
+      toggleList() {
         if (!this.totalCount) {
           return;
         }
-        this.toggleShow = !this.toggleShow;
-        if (this.toggleShow) {
-          this.$nextTick(() => {
-            if (!this.scrool) {
-              this.scrool = new BScroll(this.$refs.listContent, {
-                click: true
-              });
-            } else {
-              this.scrool.refresh();
-            }
-          });
-        }
+        this.toggleStatus = !this.toggleStatus;
+      },
+      hideList() {
+        this.toggleStatus = false;
+      },
+      empty() {
+        this.selectFoods.forEach((food) => {
+          food.count = 0;
+        });
       }
     },
     components: {
@@ -195,12 +216,12 @@
     position: fixed
     left: 0
     bottom: 0
-    z-index: 99
     width: 100%
     background: #141d27
-    .content
+    .shopcart-content
       display: flex
       align-items: center
+      width: 100%
       color: rgba(255, 255, 255, 0.4)
       .content-left
         flex: 1
@@ -266,25 +287,14 @@
         &.enough
           background: #00b43c
           color: #fff
-    .ball-container
-      .ball
-        position: fixed
-        left: 32px
-        bottom: 26px
-        z-index: 99
-        transition: all 0.4s cubic-bezier(.46, -0.59, .82, .51)
-        .inner
-          width: 16px
-          height: 16px
-          border-radius: 50%
-          background: rgb(0, 160, 220)
-          transition: all 0.4s linear
     .shopcart-list
       position: absolute
-      z-index: -1
       left: 0
       bottom: 48px
       width: 100%
+      transition: all 0.3s
+      &.fold-enter, &.fold-leave-to
+        transform: translateY(50px)
       .list-header
         height: 40px
         line-height: 40px
@@ -321,4 +331,29 @@
               font-size: 14px
               font-weight: 700
               color: rgb(240, 20, 20)
+    .list-mask
+      position: fixed
+      z-index: -1
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      background: rgba(7, 17, 27, 0.6)
+      backdrop-filter: blur(10px)
+      transition: all 0.2s
+      &.fade-enter, &.fade-leave-to
+        opacity: 0
+    .ball-container
+      .ball
+        position: fixed
+        z-index: 99
+        left: 32px
+        bottom: 26px
+        transition: all 0.4s cubic-bezier(.46, -0.59, .82, .51)
+        .inner
+          width: 16px
+          height: 16px
+          border-radius: 50%
+          background: rgb(0, 160, 220)
+          transition: all 0.4s linear
 </style>

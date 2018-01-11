@@ -70,7 +70,6 @@
       text-align: center
       width: 100%
       color: rgb(147, 153, 159)
-      transition: all 0.25s linear
     .cart-increase
       padding: 0 12px
       z-index: 99
