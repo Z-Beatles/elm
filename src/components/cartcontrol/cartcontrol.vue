@@ -1,11 +1,11 @@
 <template>
   <div class="cartcontrol">
+    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     <transition name="move">
       <div class="cart-decrease" v-show="food.count>0" @click.stop="decreaseCart">
         <div class="inner icon-remove_circle_outline"></div>
       </div>
     </transition>
-    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     <div class="cart-increase icon-add_circle" @click.stop="addCart"></div>
   </div>
 </template>
@@ -48,6 +48,8 @@
   .cartcontrol
     display: flex
     position: relative
+    width: 96px
+    justify-content: flex-end
     font-size: 24px
     color: rgb(0, 160, 220)
     .cart-decrease
@@ -62,7 +64,6 @@
         .inner
           transform: rotate(180deg)
     .cart-count
-      z-index: -1
       position: absolute
       line-height: 24px
       font-size: 12px

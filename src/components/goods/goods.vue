@@ -10,17 +10,17 @@
         </li>
       </ul>
     </div>
-    <div class="food-wrapper" ref="foodWrapper">
+    <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
         <li class="food-list food-list-hook" v-for="item in goods">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li class="food-item" v-for="food in item.foods" @click="selectFood(food,$event)">
-              <div class="icon">
+            <li class="food-item" v-for="food in item.foods" >
+              <div class="icon" @click="selectFood(food,$event)">
                 <img width="57px" height="58px" :src="food.icon">
               </div>
               <div class="content">
-                <h2 class="name">{{food.name}}</h2>
+                <h2 class="name" @click="selectFood(food,$event)">{{food.name}}</h2>
                 <p class="desc">{{food.description}}</p>
                 <div class="extra">
                   <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
@@ -113,17 +113,16 @@
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {
           click: true
         });
-        this.foodScroll = new BScroll(this.$refs.foodWrapper, {
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           click: true,
           probeType: 3
         });
-
-        this.foodScroll.on('scroll', (pos) => {
+        this.foodsScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y));
         });
       },
       _calculateHeight() {
-        let foodList = this.$refs.foodWrapper.getElementsByClassName('food-list-hook');
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
         let height = 0;
         this.listHeight.push(height);
         for (let i = 0; i < foodList.length; i++) {
@@ -136,9 +135,9 @@
         if (!event._constructed) {
           return;
         }
-        let foodList = this.$refs.foodWrapper.getElementsByClassName('food-list-hook');
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
         let el = foodList[index];
-        this.foodScroll.scrollToElement(el, 300);
+        this.foodsScroll.scrollToElement(el, 300);
       },
       selectFood(food, event) {
         if (!event._constructed) {
@@ -208,7 +207,7 @@
           vertical-align: middle
           font-size: 12px
           border-1px(rgba(7, 17, 27, 0.1))
-    .food-wrapper
+    .foods-wrapper
       flex: 1
       .title
         padding-left: 14px
