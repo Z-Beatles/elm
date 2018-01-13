@@ -5,9 +5,6 @@
         <div class="food-header">
           <div class="image-header">
             <img :src="food.image">
-            <div class="back" @click="hide">
-              <i class="icon-arrow_lift"></i>
-            </div>
           </div>
           <div class="content">
             <h1 class="title">{{food.name}}</h1>
@@ -55,6 +52,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="btn-back" @click="hide">
+        <i class="icon-arrow_lift"></i>
       </div>
     </div>
   </transition>
@@ -166,17 +166,6 @@
             left: 0
             width: 100%
             height: 100%
-          .back
-            position: absolute
-            top: 10px
-            left: 10px
-            background: radial-gradient(rgba(7, 17, 27, 0.1), rgba(7, 17, 27, 0.3))
-            border-radius: 50%
-            .icon-arrow_lift
-              display: block
-              padding: 10px
-              font-size: 20px
-              color: #fff
         .content
           padding: 18px
           .title
@@ -284,4 +273,15 @@
               .icon-thumb_down
                 color: rgb(147, 153, 159)
                 padding-right: 4px
+    .btn-back
+      position: fixed
+      top: 15px
+      left: 15px
+      background: radial-gradient(rgba(7, 17, 27, 0.1), rgba(7, 17, 27, 0.3))
+      border-radius: 50%
+      .icon-arrow_lift
+        display: block
+        padding: 10px
+        font-size: 20px
+        color: #fff
 </style>
