@@ -40,7 +40,7 @@
                   <div class="name">{{item.username}}<img class="avatar" width="12" height="12" :src="item.avatar">
                   </div>
                 </div>
-                <div class="time">{{item.rateTime}}</div>
+                <div class="time">{{item.rateTime | formatDate}}</div>
                 <div class="comment">
                   <p><span :class="{'icon-thumb_up':item.rateType===0,
                   'icon-thumb_down':item.rateType===1}"></span>{{item.text}}</p>
@@ -66,6 +66,7 @@
   import BScroll from 'better-scroll';
   import Cartcontrol from '@/components/cartcontrol/cartcontrol';
   import Ratingselect from '@/components/ratingselect/ratingselect';
+  import {formateDate} from '@/common/js/date';
 
   const All = 2;
 
@@ -143,6 +144,12 @@
         } else {
           return type === this.selectType;
         }
+      }
+    },
+    filters: {
+      formatDate(time) {
+        let date = new Date(time);
+        return formateDate(date, 'yyyy-MM-dd hh:mm');
       }
     },
     components: {
