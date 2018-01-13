@@ -217,6 +217,7 @@
             .old
               font-size: 10px
               color: rgb(147, 153, 159)
+              text-decoration: line-through
         .cartcontrol-wrapper
           position: absolute
           bottom: 6px
