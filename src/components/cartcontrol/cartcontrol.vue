@@ -30,7 +30,7 @@
           this.food.count++;
         }
         // 添加派发事件，将dom对象作为事件参数传入
-        this.$root.eventHub.$emit('cart.add', event.target);
+        this.$root.eventHub.$emit('cartcontrol.addCart', event.target);
       },
       decreaseCart() {
         if (!event._constructed) {
@@ -46,13 +46,22 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .cartcontrol
-    display: flex
     position: relative
     width: 96px
-    justify-content: flex-end
+    height: 24px
     font-size: 24px
     color: rgb(0, 160, 220)
+    .cart-count
+      position: absolute
+      line-height: 24px
+      font-size: 12px
+      text-align: center
+      width: 100%
+      color: rgb(147, 153, 159)
     .cart-decrease
+      position: absolute
+      top: 0
+      left: 0
       padding: 0 12px
       transition: all 0.25s linear
       .inner
@@ -63,14 +72,9 @@
         transform: translate3d(30px, 0, 0)
         .inner
           transform: rotate(180deg)
-    .cart-count
-      position: absolute
-      line-height: 24px
-      font-size: 12px
-      text-align: center
-      width: 100%
-      color: rgb(147, 153, 159)
     .cart-increase
+      position: absolute
+      top: 0
+      right: 0
       padding: 0 12px
-      z-index: 99
 </style>

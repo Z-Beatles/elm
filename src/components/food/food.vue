@@ -2,7 +2,7 @@
   <transition name="move">
     <div class="food-wrapper" ref="foodWrapper" v-show="showFlag">
       <div class="food-content">
-        <div class="header">
+        <div class="food-header">
           <div class="image-header">
             <img :src="food.image">
             <div class="back" @click="hide">
@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="cartcontrol-wrapper">
-            <Cartcontrol :food="food"></Cartcontrol>
+            <Cartcontrol :food="food" v-show="food.count>0"></Cartcontrol>
           </div>
           <transition name="faded">
             <div class="btn-buy" v-show="!food.count || food.count===0" @click="addFirst">加入购物车</div>
@@ -29,6 +29,31 @@
         <div class="food-info" v-show="food.info">
           <h1 class="title">商品介绍</h1>
           <div class="info">{{food.info}}</div>
+        </div>
+        <div class="food-ratings">
+          <h1 class="title">商品评价</h1>
+          <div class="ratingselect-wrapper">
+            <Ratingselect :ratings="food.ratings" :selectType="selectType"
+                          :onlyContent="onlyContent" :desc="desc"></Ratingselect>
+          </div>
+          <div class="rating-wrapper">
+            <ul v-show="food.ratings && food.ratings.length">
+              <li class="rating-item" v-for="item in food.ratings">
+                <div class="user">
+                  <div class="name">{{item.username}}<img class="avatar" width="12" height="12" :src="item.avatar">
+                  </div>
+                </div>
+                <div class="time">{{item.rateTime}}</div>
+                <div class="comment">
+                  <p><span :class="{'icon-thumb_up':item.rateType===0,
+                  'icon-thumb_down':item.rateType===1}"></span>{{item.text}}</p>
+                </div>
+              </li>
+            </ul>
+            <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
+              <p>没有评论</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -40,6 +65,9 @@
   import Vue from 'vue';
   import BScroll from 'better-scroll';
   import Cartcontrol from '@/components/cartcontrol/cartcontrol';
+  import Ratingselect from '@/components/ratingselect/ratingselect';
+
+  const All = 2;
 
   export default {
     props: {
@@ -49,12 +77,32 @@
     },
     data() {
       return {
-        showFlag: false
+        showFlag: false,
+        selectType: All,
+        onlyContent: false,
+        desc: {
+          all: '全部',
+          positive: '推荐',
+          negative: '吐槽'
+        }
       };
+    },
+    created() {
+      // 接收子组件传来的selectRating事件
+      this.$root.eventHub.$on('ratingselect.selectRating', (type) => {
+        this.selectType = type;
+      });
+      // 接收子组件传来的selectRating事件
+      this.$root.eventHub.$on('ratingselect.toggleContent', () => {
+        this.onlyContent = !this.onlyContent;
+      });
     },
     methods: {
       show() {
         this.showFlag = true;
+        // 每次展示商品详情都进行初始化
+        this.selectType = 2;
+        this.onlyContent = false;
 
         this.$nextTick(() => {
           this._initScroll();
@@ -82,7 +130,8 @@
       }
     },
     components: {
-      Cartcontrol
+      Cartcontrol,
+      Ratingselect
     }
   };
 </script>
@@ -100,7 +149,7 @@
     &.move-enter, &.move-leave-to
       transform: translate3d(100%, 0, 0)
     .food-content
-      .header
+      .food-header
         position: relative
         background: #fff
         margin-bottom: 16px
@@ -191,4 +240,48 @@
           font-weight: 200
           color: rgb(77, 85, 93)
           line-height: 24px
+      .food-ratings
+        padding: 18px
+        background: #fff
+        border-top: 1px solid rgba(7, 17, 27, 0.1)
+        margin-bottom: 16px
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+        box-shadow: -2px 2px 8px rgba(7, 17, 27, 0.3)
+        .title
+          font-size: 14px
+        .ratingselect-wrapper
+          margin-top: 18px
+        .rating-wrapper
+          .rating-item
+            position: relative
+            padding: 16px 0
+            border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+            .user
+              position: absolute
+              right: 0
+              top: 16px
+              line-height: 12px
+              .name
+                font-size: 10px
+                color: rgb(147, 153, 159)
+                .avatar
+                  padding-left: 6px
+                  width: 12px
+                  height: 12px
+                  border-radius: 50%
+            .time
+              font-size: 10px
+              color: rgb(147, 153, 159)
+
+            .comment
+              padding-top: 12px
+              font-size: 12px
+              color: rgb(7, 17, 27)
+              line-height: 16px
+              .icon-thumb_up
+                color: rgb(0, 160, 220)
+                padding-right: 4px
+              .icon-thumb_down
+                color: rgb(147, 153, 159)
+                padding-right: 4px
 </style>

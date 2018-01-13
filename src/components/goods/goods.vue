@@ -103,7 +103,7 @@
         }
       });
       // 接收子组件传来的car.add事件
-      this.$root.eventHub.$on('cart.add', (target) => {
+      this.$root.eventHub.$on('cartcontrol.addCart', (target) => {
         // 调用另一子组件的drop方法
         this.$refs.shopcart.drop(target);
       });
