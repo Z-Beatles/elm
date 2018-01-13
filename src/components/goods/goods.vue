@@ -15,12 +15,12 @@
         <li class="food-list food-list-hook" v-for="item in goods">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li class="food-item" v-for="food in item.foods" >
-              <div class="icon" @click="selectFood(food,$event)">
+            <li class="food-item" v-for="food in item.foods" @click="selectFood(food,$event)">
+              <div class="icon">
                 <img width="57px" height="58px" :src="food.icon">
               </div>
               <div class="content">
-                <h2 class="name" @click="selectFood(food,$event)">{{food.name}}</h2>
+                <h2 class="name">{{food.name}}</h2>
                 <p class="desc">{{food.description}}</p>
                 <div class="extra">
                   <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
@@ -262,6 +262,7 @@
               text-decoration: line-through
           .cartcontrol-wrapper
             position: absolute
+            z-index: auto
             right: 0
-            bottom: 0
+            bottom: -12px
 </style>

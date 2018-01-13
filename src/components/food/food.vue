@@ -196,7 +196,7 @@
               color: rgb(147, 153, 159)
         .cartcontrol-wrapper
           position: absolute
-          bottom: 18px
+          bottom: 6px
           right: 6px
         .btn-buy
           position: absolute

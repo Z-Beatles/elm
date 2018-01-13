@@ -48,12 +48,12 @@
   .cartcontrol
     position: relative
     width: 96px
-    height: 24px
+    height: 48px
     font-size: 24px
     color: rgb(0, 160, 220)
     .cart-count
       position: absolute
-      line-height: 24px
+      line-height: 48px
       font-size: 12px
       text-align: center
       width: 100%
@@ -62,10 +62,10 @@
       position: absolute
       top: 0
       left: 0
-      padding: 0 12px
-      transition: all 0.25s linear
+      padding: 12px 12px
+      transition: all 0.3s linear
       .inner
-        transition: all 0.25s linear
+        transition: all 0.3s linear
         transform: rotate(0)
       &.move-enter, &.move-leave-to
         opacity: 0
@@ -76,5 +76,5 @@
       position: absolute
       top: 0
       right: 0
-      padding: 0 12px
+      padding: 12px 12px
 </style>
