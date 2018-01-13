@@ -35,7 +35,7 @@
           </div>
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
-              <li class="rating-item" v-for="item in food.ratings">
+              <li class="rating-item" v-show="needShow(item.rateType,item.text)" v-for="item in food.ratings">
                 <div class="user">
                   <div class="name">{{item.username}}<img class="avatar" width="12" height="12" :src="item.avatar">
                   </div>
@@ -48,7 +48,7 @@
               </li>
             </ul>
             <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
-              <p>没有评论</p>
+              <p>暂无评价！</p>
             </div>
           </div>
         </div>
@@ -91,10 +91,16 @@
       // 接收子组件传来的selectRating事件
       this.$root.eventHub.$on('ratingselect.selectRating', (type) => {
         this.selectType = type;
+        this.$nextTick(() => {
+          this.foodScroll.refresh();
+        });
       });
-      // 接收子组件传来的selectRating事件
+      // 接收子组件传来的toggleContent事件
       this.$root.eventHub.$on('ratingselect.toggleContent', () => {
         this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.foodScroll.refresh();
+        });
       });
     },
     methods: {
@@ -127,6 +133,16 @@
         Vue.set(this.food, 'count', 1);
         // 添加派发事件,显示小球动画
         this.$root.eventHub.$emit('cart.add', event.target);
+      },
+      needShow(type, text) {
+        if (this.onlyContent && !text) {
+          return false;
+        }
+        if (this.selectType === All) {
+          return true;
+        } else {
+          return type === this.selectType;
+        }
       }
     },
     components: {
@@ -273,6 +289,10 @@
               .icon-thumb_down
                 color: rgb(147, 153, 159)
                 padding-right: 4px
+        .no-rating
+          padding: 16px 0
+          font-size 12px
+          color: rgb(147, 153, 159)
     .btn-back
       position: fixed
       top: 15px

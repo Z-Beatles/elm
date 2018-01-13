@@ -70,12 +70,14 @@
         if (!event._constructed) {
           return;
         }
+        // 发送selectRating事件
         this.$root.eventHub.$emit('ratingselect.selectRating', type);
       },
       toggleContent() {
         if (!event._constructed) {
           return;
         }
+        // 发送toggleContent事件
         this.$root.eventHub.$emit('ratingselect.toggleContent');
       }
     }
