@@ -15,11 +15,20 @@
 
   export default {
     props: {
+      // 商品对象信息
       food: {
         type: Object
       }
     },
     methods: {
+      decreaseCart() {
+        if (!event._constructed) {
+          return;
+        }
+        if (this.food.count) {
+          this.food.count--;
+        }
+      },
       addCart(event) {
         if (!event._constructed) {
           return;
@@ -29,16 +38,8 @@
         } else {
           this.food.count++;
         }
-        // 添加派发事件，将dom对象作为事件参数传入
-        this.$root.eventHub.$emit('cartcontrol.addCart', event.target);
-      },
-      decreaseCart() {
-        if (!event._constructed) {
-          return;
-        }
-        if (this.food.count) {
-          this.food.count--;
-        }
+        // 派发add事件，将dom对象作为事件参数传入
+        this.$emit('add', event.target);
       }
     }
   };

@@ -74,15 +74,15 @@
         if (!event._constructed) {
           return;
         }
-        // 发送selectRating事件
-        this.$root.eventHub.$emit('ratingselect.selectRating', type);
+        // 派发select事件，将type作为事件参数传入
+        this.$emit('select', type);
       },
       toggleContent() {
         if (!event._constructed) {
           return;
         }
-        // 发送toggleContent事件
-        this.$root.eventHub.$emit('ratingselect.toggleContent');
+        // 派发toggle事件
+        this.$emit('toggle');
       }
     }
   };

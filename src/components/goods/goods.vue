@@ -2,20 +2,20 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li class="menu-item" :class="{ current : currentIndex === index }"
-            v-for="(item, index) in goods" @click="selectMeun(index, $event)">
+        <li class="menu-item" :class="{ current : currentIndex === index }" v-for="(good, index) in goods"
+            @click="selectMenu(index, $event)">
           <span class="text border-1px">
-            <span class="icon" :class="classMap[item.type]" v-show="item.type>0"></span>{{item.name}}
+            <span class="icon" :class="classMap[good.type]" v-show="good.type>0"></span>{{good.name}}
           </span>
         </li>
       </ul>
     </div>
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li class="food-list food-list-hook" v-for="item in goods">
-          <h1 class="title">{{item.name}}</h1>
+        <li class="food-list food-list-hook" v-for="good in goods">
+          <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li class="food-item" v-for="food in item.foods" @click="selectFood(food,$event)">
+            <li class="food-item" v-for="food in good.foods" @click="selectFood(food, $event)">
               <div class="icon">
                 <img width="57px" height="58px" :src="food.icon">
               </div>
@@ -30,7 +30,7 @@
                   class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <Cartcontrol :food="food"></Cartcontrol>
+                  <Cartcontrol @add="addFood" :food="food"></Cartcontrol>
                 </div>
               </div>
             </li>
@@ -40,7 +40,7 @@
     </div>
     <Shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
               :min-price="seller.minPrice"></Shopcart>
-    <Food ref="food" :food="selectedFood"></Food>
+    <Food @add="addFood" ref="food" :food="selectedFood"></Food>
   </div>
 </template>
 
@@ -102,13 +102,31 @@
           });
         }
       });
-      // 接收子组件传来的car.add事件
-      this.$root.eventHub.$on('cartcontrol.addCart', (target) => {
-        // 调用另一子组件的drop方法
-        this.$refs.shopcart.drop(target);
-      });
     },
     methods: {
+      selectMenu(index, event) {
+        if (!event._constructed) {
+          return;
+        }
+        let foodList = this.$refs.foodsWrapper.querySelectorAll('.food-list-hook');
+        let el = foodList[index];
+        this.foodsScroll.scrollToElement(el, 300);
+      },
+      selectFood(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.selectedFood = food;
+        this.$refs.food.show();
+      },
+      addFood(target) {
+        this.drop(target);
+      },
+      drop(target) {
+        this.$nextTick(() => {
+          this.$refs.shopcart.drop(target);
+        });
+      },
       _initScroll() {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {
           click: true
@@ -130,21 +148,6 @@
           height += item.clientHeight;
           this.listHeight.push(height);
         }
-      },
-      selectMeun(index, event) {
-        if (!event._constructed) {
-          return;
-        }
-        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
-        let el = foodList[index];
-        this.foodsScroll.scrollToElement(el, 300);
-      },
-      selectFood(food, event) {
-        if (!event._constructed) {
-          return;
-        }
-        this.selectedFood = food;
-        this.$refs.food.show();
       }
     },
     components: {

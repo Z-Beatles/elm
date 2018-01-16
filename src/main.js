@@ -16,9 +16,5 @@ new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: {App},
-  data: {
-    // 统一事件中心用于管理组件间的通信
-    eventHub: new Vue()
-  }
+  components: {App}
 });

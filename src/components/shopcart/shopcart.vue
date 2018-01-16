@@ -31,7 +31,7 @@
                 <span class="price">￥{{food.price*food.count}}</span>
               </div>
               <div class="cartcontrol-wrapper">
-                <Cartcontrol :food="food"></Cartcontrol>
+                <Cartcontrol @add="addFood" :food="food"></Cartcontrol>
               </div>
             </li>
           </ul>
@@ -42,9 +42,9 @@
       <div class="list-mask" v-show="listShow" @click="toggleList"></div>
     </transition>
     <div class="ball-container">
-      <div v-for="item in balls">
+      <div v-for="ball in balls">
         <transition name="drop" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
-          <div class="ball" v-show="item.show">
+          <div class="ball" v-show="ball.show">
             <div class="inner inner-hook"></div>
           </div>
         </transition>
@@ -59,16 +59,19 @@
 
   export default {
     props: {
+      // 购物车列表
       selectFoods: {
         type: Array,
         default() {
           return [];
         }
       },
+      // 配送费
       deliveryPrice: {
         type: Number,
         default: 0
       },
+      // 起送费
       minPrice: {
         type: Number,
         default: 0
@@ -144,6 +147,7 @@
       }
     },
     methods: {
+      // 添加下落小球，需传入点击的元素用于计算小球动画初始位置
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
           let ball = this.balls[i];
@@ -154,6 +158,9 @@
             return;
           }
         }
+      },
+      addFood(target) {
+        this.drop(target);
       },
       beforeEnter(el) {
         let count = this.balls.length;
@@ -347,18 +354,17 @@
         background: #fff
         .food-item
           display: flex
-          padding: 12px 0
           border-bottom: 1px solid rgba(7, 17, 27, 0.1)
           .details
             display: flex
             justify-content: space-between
             flex: 1
             .name
-              line-height: 24px
+              line-height: 48px
               font-size: 14px
               color: rgb(7, 17, 27)
             .price
-              line-height: 24px
+              line-height: 48px
               font-size: 14px
               font-weight: 700
               color: rgb(240, 20, 20)

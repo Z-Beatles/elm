@@ -3,7 +3,7 @@
     <div class="food" ref="food" v-show="showFlag">
       <div class="food-content">
         <div class="food-header">
-          <div class="image-header">
+          <div class="image-wrapper">
             <img :src="food.image">
           </div>
           <div class="content">
@@ -17,7 +17,7 @@
             </div>
           </div>
           <div class="cartcontrol-wrapper">
-            <Cartcontrol :food="food" v-show="food.count>0"></Cartcontrol>
+            <Cartcontrol @add="addFood" :food="food" v-show="food.count>0"></Cartcontrol>
           </div>
           <transition name="faded">
             <div class="btn-buy" v-show="!food.count || food.count===0" @click="addFirst">加入购物车</div>
@@ -30,20 +30,20 @@
         <div class="food-ratings">
           <h1 class="title">商品评价</h1>
           <div class="ratingselect-wrapper">
-            <Ratingselect :ratings="food.ratings" :selectType="selectType"
-                          :onlyContent="onlyContent" :desc="desc"></Ratingselect>
+            <Ratingselect @select="selectRating" @toggle="toggleContent" :ratings="food.ratings"
+                          :selectType="selectType" :onlyContent="onlyContent" :desc="desc"></Ratingselect>
           </div>
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
-              <li class="rating-item" v-show="needShow(item.rateType,item.text)" v-for="item in food.ratings">
+              <li class="rating-item" v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings">
                 <div class="user">
-                  <div class="name">{{item.username}}<img class="avatar" width="12" height="12" :src="item.avatar">
+                  <div class="name">{{rating.username}}<img class="avatar" width="12" height="12" :src="rating.avatar">
                   </div>
                 </div>
-                <div class="time">{{item.rateTime | formatDate}}</div>
+                <div class="time">{{rating.rateTime | formatDate}}</div>
                 <div class="comment">
-                  <p><span :class="{'icon-thumb_up':item.rateType===0,
-                  'icon-thumb_down':item.rateType===1}"></span>{{item.text}}</p>
+                  <p><span :class="{'icon-thumb_up':rating.rateType===0,
+                  'icon-thumb_down':rating.rateType===1}"></span>{{rating.text}}</p>
                 </div>
               </li>
             </ul>
@@ -88,22 +88,6 @@
         }
       };
     },
-    created() {
-      // 接收子组件传来的selectRating事件
-      this.$root.eventHub.$on('ratingselect.selectRating', (type) => {
-        this.selectType = type;
-        this.$nextTick(() => {
-          this.foodScroll.refresh();
-        });
-      });
-      // 接收子组件传来的toggleContent事件
-      this.$root.eventHub.$on('ratingselect.toggleContent', () => {
-        this.onlyContent = !this.onlyContent;
-        this.$nextTick(() => {
-          this.foodScroll.refresh();
-        });
-      });
-    },
     methods: {
       show() {
         this.showFlag = true;
@@ -133,7 +117,7 @@
         }
         Vue.set(this.food, 'count', 1);
         // 添加派发事件,显示小球动画
-        this.$root.eventHub.$emit('cart.add', event.target);
+        this.$emit('add', event.target);
       },
       needShow(type, text) {
         if (this.onlyContent && !text) {
@@ -144,6 +128,21 @@
         } else {
           return type === this.selectType;
         }
+      },
+      addFood(target) {
+        this.$emit('add', target);
+      },
+      selectRating(type) {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.foodScroll.refresh();
+        });
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.foodScroll.refresh();
+        });
       }
     },
     filters: {
@@ -178,7 +177,7 @@
         margin-bottom: 16px
         border-bottom: 1px solid rgba(7, 17, 27, 0.1)
         box-shadow: -2px 2px 8px rgba(7, 17, 27, 0.3)
-        .image-header
+        .image-wrapper
           position: relative
           width: 100%
           height: 0

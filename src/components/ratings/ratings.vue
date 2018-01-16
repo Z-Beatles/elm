@@ -25,11 +25,12 @@
         </div>
       </div>
       <div class="ratingselect-wrapper">
-        <Ratingselect :ratings="ratings" :selectType="selectType" :onlyContent="onlyContent"></Ratingselect>
+        <Ratingselect @select="selectRating" @toggle="toggleContent" :ratings="ratings"
+                      :selectType="selectType" :onlyContent="onlyContent"></Ratingselect>
       </div>
       <div class="ratings-wrapper">
         <ul>
-          <li class="rating-item" v-for="rating in ratings">
+          <li class="rating-item" v-for="rating in ratings" v-show="needShow(rating.rateType, rating.text)">
             <div class="avatar">
               <img :src="rating.avatar" width="28" height="28">
             </div>
@@ -72,7 +73,7 @@
       return {
         ratings: [],
         selectType: All,
-        onlyContent: false
+        onlyContent: true
       };
     },
     created() {
@@ -90,6 +91,28 @@
       _initScroll() {
         this.ratingScroll = new BScroll(this.$refs.ratings, {
           click: true
+        });
+      },
+      needShow(type, text) {
+        if (this.onlyContent && !text) {
+          return false;
+        }
+        if (this.selectType === All) {
+          return true;
+        } else {
+          return type === this.selectType;
+        }
+      },
+      selectRating(type) {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.ratingScroll.refresh();
+        });
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.ratingScroll.refresh();
         });
       }
     },
