@@ -22,5 +22,3 @@ new Vue({
     eventHub: new Vue()
   }
 });
-
-router.push('/goods');

@@ -12,9 +12,11 @@
 
   export default {
     props: {
+      // 星星大小，可取值24，38，46
       size: {
-        type: Number /* 可取值24，38，46 */
+        type: Number
       },
+      // 分数
       score: {
         type: Number
       }

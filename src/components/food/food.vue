@@ -1,6 +1,6 @@
 <template>
   <transition name="move">
-    <div class="food-wrapper" ref="foodWrapper" v-show="showFlag">
+    <div class="food" ref="food" v-show="showFlag">
       <div class="food-content">
         <div class="food-header">
           <div class="image-header">
@@ -117,7 +117,7 @@
       },
       _initScroll() {
         if (!this.foodScroll) {
-          this.foodScroll = new BScroll(this.$refs.foodWrapper, {
+          this.foodScroll = new BScroll(this.$refs.food, {
             click: true
           });
         } else {
@@ -147,8 +147,8 @@
       }
     },
     filters: {
-      formatDate(time) {
-        let date = new Date(time);
+      formatDate(timeStamp) {
+        let date = new Date(timeStamp);
         return formateDate(date, 'yyyy-MM-dd hh:mm');
       }
     },
@@ -160,7 +160,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  .food-wrapper
+  .food
     position: fixed
     top: 0
     left: 0

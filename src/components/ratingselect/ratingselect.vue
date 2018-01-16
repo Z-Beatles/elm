@@ -28,20 +28,24 @@
 
   export default {
     props: {
+      // 评论列表
       ratings: {
         type: Array,
         default() {
           return [];
         }
       },
+      // 默认选择的评论
       selectType: {
         type: Number,
         default: All
       },
+      // 只显示有内容的评论
       onlyContent: {
         type: Boolean,
         default: false
       },
+      // 按钮描述信息
       desc: {
         type: Object,
         default() {
