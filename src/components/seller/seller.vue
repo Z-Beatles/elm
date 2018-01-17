@@ -9,9 +9,9 @@
             <span class="rating-count">({{seller.ratingCount}})</span>
             <span class="sell-count">月售{{seller.sellCount}}单</span>
           </div>
-          <div class="favorite">
-            <span class="icon-favorite"></span>
-            <span class="text">已收藏</span>
+          <div class="favorite" @click="toggleFavorite">
+            <span class="icon-favorite" :class="{active:favorite}"></span>
+            <span class="text">{{favoriteText}}</span>
           </div>
         </div>
         <div class="count">
@@ -62,11 +62,24 @@
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
   import Star from '@/components/star/star';
+  import {saveToLocal, loadFromLocal} from '@/common/js/store';
 
   export default {
     props: {
       seller: {
         type: Object
+      }
+    },
+    data() {
+      return {
+        favorite: (() => {
+          return loadFromLocal(this.seller.id, 'favorite', false);
+        })()
+      };
+    },
+    computed: {
+      favoriteText() {
+        return this.favorite ? '已收藏' : '收藏';
       }
     },
     created() {
@@ -87,6 +100,13 @@
       });
     },
     methods: {
+      toggleFavorite(event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.favorite = !this.favorite;
+        saveToLocal(this.seller.id, 'favorite', this.favorite);
+      },
       _initScroll() {
         if (!this.sellerScroll) {
           this.sellerScroll = new BScroll(this.$refs.seller, {
@@ -172,8 +192,10 @@
               display: block
               font-size: 24px
               line-height: 24px
-              color: rgb(240, 20, 20)
+              color: #d4d6d9
               margin-bottom: 4px
+              &.active
+                color: rgb(240, 20, 20)
             .text
               display: block
               font-size: 10px
@@ -211,7 +233,7 @@
           line-height: 14px
           margin-bottom: 8px
         .text
-          padding: 8px 12px 6px 12px
+          padding: 0 12px 6px 12px
           font-size: 12px
           color: rgb(240, 20, 20)
           line-height: 24px
