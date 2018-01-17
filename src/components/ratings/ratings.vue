@@ -135,11 +135,14 @@
   .ratings
     position: absolute
     top: 174px
-    bottom: 46px
+    bottom: 0
     width: 100%
     overflow: hidden
+    background: #f3f5f7
     .ratings-content
+      background: #fff
       border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+      box-shadow: -2px 2px 8px rgba(7, 17, 27, 0.3);
       .overview
         display: flex
         padding: 18px 0
