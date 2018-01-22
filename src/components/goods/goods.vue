@@ -49,8 +49,9 @@
   import Shopcart from '@/components/shopcart/shopcart';
   import Cartcontrol from '@/components/cartcontrol/cartcontrol';
   import Food from '@/components/food/food';
+  import {goods} from '@/data/getdata-dev';
 
-  const ERR_OK = 0;
+  const CODE_SUCCESS = 0;
 
   export default {
     props: {
@@ -92,16 +93,16 @@
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
 
-      this.$http.get('/api/goods').then((response) => {
-        response = response.body;
-        if (response.errno === ERR_OK) {
-          this.goods = response.data;
-          this.$nextTick(() => {
-            this._initScroll();
-            this._calculateHeight();
-          });
-        }
-      });
+      goods().then(
+        (data) => {
+          if (data.code === CODE_SUCCESS) {
+            this.goods = data.data;
+            this.$nextTick(() => {
+              this._initScroll();
+              this._calculateHeight();
+            });
+          }
+        });
     },
     methods: {
       selectMenu(index, event) {

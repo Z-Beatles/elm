@@ -59,9 +59,10 @@
   import Star from '@/components/star/star';
   import Ratingselect from '@/components/ratingselect/ratingselect';
   import {formateDate} from '@/common/js/date';
+  import {ratings} from '@/data/getdata-dev';
 
-  const ERR_OK = 0;
   const All = 2;
+  const CODE_SUCCESS = 0;
 
   export default {
     props: {
@@ -77,15 +78,16 @@
       };
     },
     created() {
-      this.$http.get('/api/ratings').then((response) => {
-        response = response.body;
-        if (response.errno === ERR_OK) {
-          this.ratings = response.data;
-          this.$nextTick(() => {
-            this._initScroll();
-          });
+      ratings().then(
+        (data) => {
+          if (data.code === CODE_SUCCESS) {
+            this.ratings = data.data;
+            this.$nextTick(() => {
+              this._initScroll();
+            });
+          }
         }
-      });
+      );
     },
     methods: {
       _initScroll() {

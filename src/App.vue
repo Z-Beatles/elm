@@ -15,8 +15,7 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <!-- 路由出口 -->
-    <!-- 路由匹配到的组件将渲染在这里 -->
+    <!--  路由出口，路由匹配到的组件将渲染在这里 -->
     <keep-alive>
       <router-view :seller="seller"></router-view>
     </keep-alive>
@@ -25,8 +24,9 @@
 
 <script type="text/ecmascript-6">
   import Header from '@/components/header/header';
+  import {seller} from '@/data/getdata-dev';
 
-  const ERR_OK = 0;
+  const CODE_SUCCESS = 0;
 
   export default {
     name: 'app',
@@ -36,12 +36,12 @@
       };
     },
     created() {
-      this.$http.get('/api/seller').then((response) => {
-        response = response.body;
-        if (response.errno === ERR_OK) {
-          this.seller = response.data;
-        }
-      });
+      seller().then(
+        (data) => {
+          if (data.code === CODE_SUCCESS) {
+            this.seller = data.data;
+          }
+        });
     },
     components: {
       Header
