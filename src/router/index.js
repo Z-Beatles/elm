@@ -7,8 +7,12 @@ import Seller from '@/components/seller/seller';
 Vue.use(Router);
 
 export default new Router({
-  linkActiveClass: 'active',
+  mode: 'history',
   routes: [
+    {
+      path: '/',
+      redirect: '/goods'
+    },
     {
       path: '/goods',
       name: 'goods',
