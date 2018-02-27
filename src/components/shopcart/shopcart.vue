@@ -219,6 +219,7 @@
         }
         console.log(this.selectFoods);
         console.log('总计：' + this.totalPrice + '元');
+        alert('总计：' + this.totalPrice + '元');
       }
     },
     components: {
